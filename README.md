@@ -1,6 +1,13 @@
 # SalesPulse AI — AI Voice Sales Bot
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://sankar-group-assignment-7udocyxf7-krishu2814.vercel.app/)
+[![Next.js 14](https://img.shields.io/badge/Next.js_14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
+> 🌐 **Live Website Link**: [https://sankar-group-assignment-7udocyxf7-krishu2814.vercel.app/](https://sankar-group-assignment-7udocyxf7-krishu2814.vercel.app/)
+
 An interactive, production-ready AI voice sales bot built for the **Sankar Group Intern Assignment**. SalesPulse conducts real-time sales phone calls with prospects to pitch B2B SaaS software, listens and understands responses, displays live transcripts, records calls with user consent, and generates automated CRM sales summaries with 6-stage deal qualification.
+
 
 ---
 

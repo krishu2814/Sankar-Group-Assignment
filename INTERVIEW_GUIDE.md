@@ -7,6 +7,8 @@ This guide is prepared to help you confidently present, explain, and defend the 
 ## 1. 🎯 60-Second Elevator Pitch
 
 > *"For my assignment, I built **SalesPulse AI**, an interactive voice sales bot designed to qualify B2B SaaS leads over real-time conversational phone calls. It uses native browser Web Speech STT and TTS for zero-latency voice interaction, captures and records the call audio with upfront user consent, and streams the transcript live. When the call concludes, our backend analyzes the dialogue and automatically classifies the prospect into one of six standard deal stages—such as 'Demo Requested' or 'Follow-up Required'—while persisting the full session and audio recordings in IndexedDB."*
+>
+> 🌐 **Live Demo**: [https://sankar-group-assignment-7udocyxf7-krishu2814.vercel.app/](https://sankar-group-assignment-7udocyxf7-krishu2814.vercel.app/)
 
 ---
 
