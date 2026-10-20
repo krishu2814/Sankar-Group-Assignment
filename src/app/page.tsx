@@ -250,6 +250,79 @@ export default function Home() {
     }
   };
 
+  // Automated Call Simulation for Reviewers / Noisy Environments
+  const handleRunSimulation = async () => {
+    setCallState("connecting");
+    setLatestSummary(null);
+    setLatestAudioUrl(null);
+    resetTranscript();
+
+    const simMessages: Message[] = [
+      {
+        id: `bot_${Date.now()}_1`,
+        sender: "bot",
+        text: INITIAL_BOT_GREETING,
+        timestamp: "00:01",
+      },
+      {
+        id: `user_${Date.now()}_2`,
+        sender: "user",
+        text: "We currently monitor 25 AWS servers with Datadog, but our monthly bill keeps increasing. How does CloudPulse compare?",
+        timestamp: "00:08",
+      },
+      {
+        id: `bot_${Date.now()}_3`,
+        sender: "bot",
+        text: "CloudPulse provides flat pricing starting at $149 for up to 50 nodes with zero hidden per-host overages, cutting your costs by 70%. Plus, our AI diagnoses the exact root cause in under 60 seconds. Would you like to schedule a 15-minute live demo on Thursday?",
+        timestamp: "00:18",
+      },
+      {
+        id: `user_${Date.now()}_4`,
+        sender: "user",
+        text: "That sounds fantastic. Let's schedule a 15-minute live demo this Thursday at 2 PM.",
+        timestamp: "00:26",
+      },
+      {
+        id: `bot_${Date.now()}_5`,
+        sender: "bot",
+        text: "Awesome! I have you booked for Thursday at 2 PM and will send the calendar invitation with the Zoom link shortly.",
+        timestamp: "00:32",
+      },
+    ];
+
+    setCallState("in-call");
+    setMessages(simMessages);
+    setCallDurationAtEnd(35);
+
+    // Call summarize endpoint
+    setCallState("processing");
+    try {
+      const res = await fetch("/api/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcripts: simMessages }),
+      });
+      const summary: AISummary = await res.json();
+      setLatestSummary(summary);
+
+      const record: CallRecord = {
+        id: `call_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        durationSeconds: 35,
+        status: summary.salesStatus,
+        transcripts: simMessages,
+        summary,
+      };
+
+      await saveCallRecord(record);
+      setCallHistory((prev) => [record, ...prev]);
+    } catch (err) {
+      console.error("Simulation summary error:", err);
+    } finally {
+      setCallState("completed");
+    }
+  };
+
   // Clear All Call History
   const handleClearAll = async () => {
     try {
@@ -348,6 +421,7 @@ export default function Home() {
               onStartCall={handleStartCallClick}
               onEndCall={handleEndCall}
               onToggleMute={handleToggleMute}
+              onRunSimulation={handleRunSimulation}
             />
 
             {/* Live Transcript Screen */}

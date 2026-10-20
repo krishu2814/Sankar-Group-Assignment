@@ -3,6 +3,7 @@
 import React from "react";
 import { Phone, PhoneOff, Mic, MicOff, Volume2, Sparkles, Clock } from "lucide-react";
 import { CallState } from "@/types";
+import { AudioWaveform } from "./AudioWaveform";
 
 interface CallControlsProps {
   callState: CallState;
@@ -13,6 +14,7 @@ interface CallControlsProps {
   onStartCall: () => void;
   onEndCall: () => void;
   onToggleMute: () => void;
+  onRunSimulation?: () => void;
 }
 
 function formatDuration(seconds: number): string {
@@ -30,6 +32,7 @@ export function CallControls({
   onStartCall,
   onEndCall,
   onToggleMute,
+  onRunSimulation,
 }: CallControlsProps) {
   const isInCall = callState === "in-call";
   const isConnecting = callState === "connecting";
@@ -37,8 +40,8 @@ export function CallControls({
 
   return (
     <div className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-wrap items-center justify-between gap-4">
-      {/* Status & Timer */}
-      <div className="flex items-center gap-3">
+      {/* Status & Timer & Waveform */}
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
           {callState === "in-call" && (
             <span className="relative flex h-3 w-3">
@@ -79,25 +82,44 @@ export function CallControls({
           </div>
         )}
 
-        {/* Voice Indicators */}
+        {/* Live Audio Waveform when in call */}
         {isInCall && (
-          <div className="hidden sm:flex items-center gap-2 text-xs">
-            {isBotSpeaking && (
-              <span className="flex items-center gap-1 text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/30 animate-pulse">
-                <Volume2 className="w-3 h-3" /> Alex Speaking
-              </span>
-            )}
-            {isUserSpeaking && !isBotSpeaking && (
-              <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30 animate-pulse">
-                <Mic className="w-3 h-3" /> User Speaking
-              </span>
-            )}
+          <div className="flex items-center gap-2">
+            <AudioWaveform
+              isActive={isBotSpeaking || isUserSpeaking}
+              color={isUserSpeaking ? "emerald" : "indigo"}
+            />
+            <div className="hidden lg:flex items-center gap-1.5 text-[11px]">
+              {isBotSpeaking && (
+                <span className="flex items-center gap-1 text-indigo-400 font-medium">
+                  <Volume2 className="w-3.5 h-3.5" /> Alex Speaking
+                </span>
+              )}
+              {isUserSpeaking && !isBotSpeaking && (
+                <span className="flex items-center gap-1 text-emerald-400 font-medium">
+                  <Mic className="w-3.5 h-3.5" /> Listening to You
+                </span>
+              )}
+            </div>
           </div>
         )}
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
+        {/* Simulation Shortcut for Silent Environments / Interview Reviewers */}
+        {!isInCall && onRunSimulation && (
+          <button
+            onClick={onRunSimulation}
+            disabled={isConnecting || isProcessing}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/80 text-xs text-slate-300 font-medium transition-all disabled:opacity-50"
+            title="Simulate a 3-turn sales call without speaking aloud"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            Simulate Call
+          </button>
+        )}
+
         {isInCall && (
           <button
             onClick={onToggleMute}
